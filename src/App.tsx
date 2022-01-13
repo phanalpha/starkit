@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { useProvider } from './Hooks';
+import { StarkSigner } from './Signer';
 
 function App() {
+  const signer = new StarkSigner('starkex', 'immutablex', 'Only sign this request if you’ve initiated an action with Immutable X.');
+  const provider = useProvider();
+  const [starkKey, setStarkKey] = useState('');
+
+  const handleConnect = async () => {
+    if (!provider) {
+      return;
+    }
+
+    const accounts = await provider.listAccounts();
+    const key = await signer.deriveStarkKey(provider.getSigner(accounts[0]));
+
+    setStarkKey(String(key));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button onClick={handleConnect}>Connect</button>
+      <p>{starkKey}</p>
     </div>
   );
 }
