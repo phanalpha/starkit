@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { useProvider } from './Hooks';
+import { useEthereum, useProvider } from './Hooks';
 import { StarkSigner } from './Signer';
 
 function App() {
-  const signer = new StarkSigner('starkex', 'immutablex', 'Only sign this request if you’ve initiated an action with Immutable X.');
+  const starkSigner = new StarkSigner(
+    'starkex',
+    'immutablex',
+    'Only sign this request if you’ve initiated an action with Immutable X.');
+  const ethereum = useEthereum();
   const provider = useProvider();
   const [starkKey, setStarkKey] = useState('');
 
@@ -12,8 +16,8 @@ function App() {
       return;
     }
 
-    const accounts = await provider.listAccounts();
-    const key = await signer.deriveStarkKey(provider.getSigner(accounts[0]));
+    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+    const key = await starkSigner.deriveStarkKey(provider.getSigner(accounts[0]));
 
     setStarkKey(String(key));
   };
