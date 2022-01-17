@@ -16,3 +16,9 @@ export function useProvider(): providers.Web3Provider {
 
   return useMemo(() => ethereum && new providers.Web3Provider(ethereum), [ethereum]);
 }
+
+export function useSearchParams(...names: string[]) {
+  const params = new URLSearchParams(window.location.search);
+
+  return names.map(name => params.get(name) || undefined);
+}
