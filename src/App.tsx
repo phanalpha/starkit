@@ -6,9 +6,9 @@ import { StarkSigner } from './Signer';
 
 function App() {
   const starkSigner = new StarkSigner(
-    'starkex',
-    'immutablex',
-    'Only sign this request if you’ve initiated an action with Immutable X.');
+    process.env.REACT_APP_LAYER as string,
+    process.env.REACT_APP_APPLICATION as string,
+    process.env.REACT_APP_MESSAGE as string);
   const ethereum = useEthereum();
   const provider = useProvider();
   const [from_, callback] = useSearchParams('from', 'callback');
